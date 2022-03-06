@@ -71,7 +71,7 @@ class Crawler:
             print('Couldnt extract recipe from json-ld')
             return None
         print('Creating recipe object')
-        recipe = r.Recipe(recipe_json_ld)
+        recipe = r.Recipe(recipe_json_ld, url)
         pp.pprint(vars(recipe))
         print()
         return recipe

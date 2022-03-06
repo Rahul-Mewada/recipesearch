@@ -39,7 +39,7 @@ class Recipe:
         self.instructions = recipeInstructions
         self.rating = aggregateRating # TODO: create ratings object
     
-    def __init__(self, json_ld):
+    def __init__(self, json_ld, url):
         for key in json_ld:
             content = json_ld.get(key)
             match key:
@@ -73,8 +73,9 @@ class Recipe:
                 case "recipeInstructions":
                     self.instructions = content
                 case "aggregateRating":
-                    self.rating = content
+                    self.rating = Rating(content)
         self.parse_instructions()
+        self.url = url
             
     def parse_instructions(self):
         """
@@ -112,3 +113,15 @@ class Author:
                     self.name = value
                 case 'url':
                     self.url = value
+
+
+class Rating:
+    def __init__(self, rating_dict):
+        if rating_dict.get('@type') == 'AggregateRating':
+            for key in rating_dict:
+                value = rating_dict.get(key)
+                match key:
+                    case 'ratingCount':
+                        self.count = value
+                    case 'ratingValue':
+                        self.value = value
