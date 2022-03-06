@@ -1,3 +1,4 @@
+from operator import contains
 from pydoc import describe
 from unicodedata import category, name
 import pprint as pp
@@ -73,7 +74,20 @@ class Recipe:
                     self.instructions = content
                 case "aggregateRating":
                     self.rating = content
+        self.parse_instructions()
             
+    def parse_instructions(self):
+        """
+        Takes the json data of instructions and parses and returns it as a list
+        """
+        instruction_list = []
+        for instruction_dict in self.instructions:
+            if instruction_dict.get('@type') == 'HowToStep':
+                instruction_list.append(instruction_dict.get('text'))
+
+        self.instructions = instruction_list
+    
+
 class Image:
     def __init__(self, image_dict):
         for key in image_dict:
