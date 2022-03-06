@@ -88,6 +88,14 @@ class Recipe:
 
         self.instructions = instruction_list
     
+    def return_list_to_string(self, string_list):
+        """
+        Helper function to condense a list of strings to a single string seperated by *
+        """
+        return_string = ""
+        for element in string_list:
+            return_string += element + "*"
+        return return_string
 
 class Image:
     def __init__(self, image_dict):
