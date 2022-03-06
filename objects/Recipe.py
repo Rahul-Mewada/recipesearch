@@ -1,7 +1,7 @@
 from pydoc import describe
-from unicodedata import category
+from unicodedata import category, name
 import pprint as pp
-from Image import Image
+
 
 class Recipe:
     def __init__(
@@ -47,7 +47,8 @@ class Recipe:
                 case "image":
                     self.image = Image(content)
                 case "author":
-                    self.author = content
+                    if content[0].get('@type') == 'Person':
+                        self.author = Author(content)
                 case "datePublished":
                     self.date_published = content
                 case "description":
@@ -72,18 +73,28 @@ class Recipe:
                     self.instructions = content
                 case "aggregateRating":
                     self.rating = content
-
-    def parse_author(self):
-        pass
-
-    def parse_image(self):
-        pass
-    
-    def parse_instructions(self):
-        pass
-
-    def parse_ratings(self):
-        pass
-
             
-   
+class Image:
+    def __init__(self, image_dict):
+        for key in image_dict:
+            value = image_dict.get(key)
+            match key:
+                case 'description':
+                    self.description = value
+                case 'height':
+                    self.height = value
+                case 'width':
+                    self.width = value
+                case 'url':
+                    self.url = value
+
+class Author:
+    def __init__(self, author_list):
+        author_dict = author_list[0]
+        for key in author_dict:
+            value = author_dict.get(key)
+            match key:
+                case 'name':
+                    self.name = value
+                case 'url':
+                    self.url = value

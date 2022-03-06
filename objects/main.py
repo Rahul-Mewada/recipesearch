@@ -5,7 +5,7 @@ import Recipe
 def main():
     c = crawler.Crawler()
     urls = [
-        'https://www.foodnetwork.com/recipes/rachael-ray/fish-fry-recipe-1939977'
+        "https://www.allrecipes.com/recipe/246385/jans-beer-brined-corned-beef/"
     ]
     c.crawl(urls)
 
