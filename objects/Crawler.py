@@ -5,13 +5,14 @@ import pprint as pp
 import Recipe as r
 
 class Crawler:
-    def __init__(self, seed : str):
+    def __init__(self):
         pass
 
     def get_driver(self):
         """
         Creates and returns a chrome web driver
         """
+        print('Creating driver')
         options = Options()
         options.add_argument('--headless')
         driver = webdriver.Chrome(options = options)
@@ -21,19 +22,22 @@ class Crawler:
         """
         Uses the driver to return the HTML from a particular url
         """
+        print('Getting source from ' + url)
         driver.get(url)
         return driver.page_source
 
-    def get_json(self, source ):
+    def get_json(self, source):
         """
         Extracts and returns the json data from an HTML file
         """
+        print('Extracting json from source')
         return ex.extract(source, syntaxes=['json-ld'])
 
     def search_for_recipe(self, json_ld):
         """
         Searches the json-ld data for a recipe json and returns it
         """
+        print("Searching for recipes in json-ld")
         queue = []
         cur_ele = json_ld
         queue.append(cur_ele)
@@ -58,14 +62,27 @@ class Crawler:
         """
         driver = self.get_driver()
         source = self.get_source(driver, url)
-        json_ld = self.get_json(source)
-        if not json_ld:
+        if not source:
+            print("Couldnt extract HTML from " + url)
             return None
+        json_ld = self.get_json(source)
         recipe_json_ld = self.search_for_recipe(json_ld)
         if not recipe_json_ld:
+            print('Couldnt extract recipe from json-ld')
             return None
+        print('Creating recipe object')
         recipe = r.Recipe(recipe_json_ld)
         pp.pprint(vars(recipe))
+        print()
         return recipe
 
-    
+    def crawl(self, urls):
+        """
+        Returns a list of recipes from a list of urls
+        """
+        recipes = []
+        for url in urls:
+            recipe = self.return_recipe(url)
+            if recipe:
+                recipes.append(recipe)
+        return recipes
