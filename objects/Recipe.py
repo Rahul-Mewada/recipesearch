@@ -1,6 +1,7 @@
 from pydoc import describe
 from unicodedata import category
 import pprint as pp
+from Image import Image
 
 class Recipe:
     def __init__(
@@ -44,7 +45,7 @@ class Recipe:
                 case "name":
                     self.name = content
                 case "image":
-                    self.image = content
+                    self.image = Image(content)
                 case "author":
                     self.author = content
                 case "datePublished":
@@ -72,7 +73,17 @@ class Recipe:
                 case "aggregateRating":
                     self.rating = content
 
-    def parse_fields(self):
+    def parse_author(self):
         pass
+
+    def parse_image(self):
+        pass
+    
+    def parse_instructions(self):
+        pass
+
+    def parse_ratings(self):
+        pass
+
             
    
