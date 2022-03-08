@@ -92,10 +92,41 @@ class Recipe:
         """
         Helper function to condense a list of strings to a single string seperated by *
         """
-        return_string = ""
-        for element in string_list:
-            return_string += element + "*"
-        return return_string
+        if type(string_list) == str:
+            return string_list
+        elif type(string_list) == dict:
+            return_string = ""
+            for element in string_list:
+                return_string += element + "*"
+            return return_string
+
+    def to_sql(self):
+        """
+        Helper function to input Recipe into sql args
+        """
+        sql_args = (
+            self.name,
+            self.image.description,
+            self.image.height,
+            self.image.width,
+            self.image.url,
+            self.author.name,
+            self.author.url,
+            self.date_published,
+            self.description,
+            self.prep_time,
+            self.cook_time,
+            self.total_time,
+            self.return_list_to_string(self.keywords),
+            self.servings,
+            self.return_list_to_string(self.category),
+            self.return_list_to_string(self.cuisine),
+            self.return_list_to_string(self.ingredients),
+            self.return_list_to_string(self.instructions),
+            self.rating.count,
+            self.rating.value
+        )
+        return sql_args
 
 class Image:
     def __init__(self, image_dict):
