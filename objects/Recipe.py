@@ -40,6 +40,14 @@ class Recipe:
         self.rating = aggregateRating # TODO: create ratings object
     
     def __init__(self, json_ld, url):
+        self.prep_time = None
+        self.cook_time = None
+        self.total_time = None
+        self.keywords = None
+        self.description = None
+        self.servings = None
+        self.category = None
+        self.cuisine = None
         for key in json_ld:
             content = json_ld.get(key)
             match key:
@@ -130,6 +138,9 @@ class Recipe:
 
 class Image:
     def __init__(self, image_dict):
+        self.description = None
+        self.height = None
+        self.width = None
         for key in image_dict:
             value = image_dict.get(key)
             match key:
@@ -156,6 +167,8 @@ class Author:
 
 class Rating:
     def __init__(self, rating_dict):
+        self.count = None
+        self.value = None
         if rating_dict.get('@type') == 'AggregateRating':
             for key in rating_dict:
                 value = rating_dict.get(key)

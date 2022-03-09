@@ -76,13 +76,12 @@ class Crawler:
         print()
         return recipe
 
-    def crawl(self, urls):
+    def crawl(self, urls, database):
         """
-        Returns a list of recipes from a list of urls
+        Inserts recipies from a list of urls into a database
         """
-        recipes = []
         for url in urls:
             recipe = self.return_recipe(url)
             if recipe:
-                recipes.append(recipe)
-        return recipes
+                print(recipe)
+                database.insert_recipe(recipe)
