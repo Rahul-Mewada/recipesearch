@@ -102,10 +102,11 @@ class Recipe:
         """
         if type(string_list) == str:
             return string_list
-        elif type(string_list) == dict:
+        elif type(string_list) == list:
             return_string = ""
             for element in string_list:
                 return_string += element + "*"
+            print(return_string)
             return return_string
 
     def to_sql(self):

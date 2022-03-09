@@ -73,7 +73,6 @@ class Crawler:
         print('Creating recipe object')
         recipe = r.Recipe(recipe_json_ld, url)
         pp.pprint(vars(recipe))
-        print()
         return recipe
 
     def crawl(self, urls, database):
