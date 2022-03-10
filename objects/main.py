@@ -1,15 +1,10 @@
-import Crawler as crawler
-import Recipe 
-from Database import Database
+import crawler as crawler
+import recipe 
+from database import Database
 
 def main():
-    c = crawler.Crawler()
-    urls = [
-        "https://www.foodnetwork.com/recipes/food-network-kitchen/15-minute-tofu-and-vegetable-stir-fry-3676440"
-    ]
-    db = Database()
-    c.crawl(urls, db)
-    db.print_entries()
+    c = crawler.Crawler('https://www.allrecipes.com/recipes/')
+    
 
 if __name__ == '__main__':
     main()

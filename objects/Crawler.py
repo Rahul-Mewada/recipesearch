@@ -2,11 +2,18 @@ import extruct as ex
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import pprint as pp
-import Recipe as r
+import recipe as r
+import utils
+from urllib.robotparser import RobotFileParser
+
 
 class Crawler:
-    def __init__(self):
-        pass
+    def __init__(self, seed_url):
+        self.scheme, self.domain, self.path = utils.split_url(seed_url)
+        self.robot_parser = RobotFileParser()
+        self.robot_parser.set_url(utils.generate_url(self.scheme, self.domain, '/robots.txt'))
+        self.robot_parser.read()
+        self.visited_urls = {}
 
     def get_driver(self):
         """
@@ -32,6 +39,10 @@ class Crawler:
         """
         print('Extracting json from source')
         return ex.extract(source, syntaxes=['json-ld'])
+
+    def get_valid_urls(self, source):
+
+        pass
 
     def search_for_recipe(self, json_ld):
         """
@@ -75,12 +86,8 @@ class Crawler:
         pp.pprint(vars(recipe))
         return recipe
 
-    def crawl(self, urls, database):
+    def crawl(self, seed_url, database):
         """
         Inserts recipies from a list of urls into a database
         """
-        for url in urls:
-            recipe = self.return_recipe(url)
-            if recipe:
-                print(recipe)
-                database.insert_recipe(recipe)
+        pass
