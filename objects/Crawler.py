@@ -5,7 +5,7 @@ import pprint as pp
 import recipe as r
 import utils
 from urllib.robotparser import RobotFileParser
-
+from selenium.webdriver.common.by import By
 
 class Crawler:
     def __init__(self, seed_url):
@@ -13,7 +13,7 @@ class Crawler:
         self.robot_parser = RobotFileParser()
         self.robot_parser.set_url(utils.generate_url(self.scheme, self.domain, '/robots.txt'))
         self.robot_parser.read()
-        self.visited_urls = {}
+        self.visited_paths = {}
 
     def get_driver(self):
         """
@@ -40,9 +40,31 @@ class Crawler:
         print('Extracting json from source')
         return ex.extract(source, syntaxes=['json-ld'])
 
-    def get_valid_urls(self, source):
+    def get_valid_urls(self, driver, source):
+        """
+        Returns all valid urls from an html source.
+        """
+        web_elements = driver.find_elements(By.TAG_NAME, 'a')
+        links = []
+        for web_element in web_elements:
+            link = web_element.get_attribute("href")
+            if self.valid_link(link):
+                links.append(link)
+        return links
+    
+    def valid_link(self, link):
+        """
+        Returns true if a link is valid. Checks if a link is not blocked by robots.txt and if it has
+        the same domain as the seed url's domain.
+        """
+        print(link)
+        link_scheme, link_domain, link_path = utils.split_url(link)
+        if link and self.robot_parser.can_fetch("*", link) and \
+            link_domain == self.domain:
+            return True
+        return False
+            
 
-        pass
 
     def search_for_recipe(self, json_ld):
         """
@@ -86,8 +108,12 @@ class Crawler:
         pp.pprint(vars(recipe))
         return recipe
 
-    def crawl(self, seed_url, database):
+    def crawl(self, seed_url):
         """
         Inserts recipies from a list of urls into a database
         """
+        driver = self.get_driver()
+        source = self.get_source(driver, seed_url)
+        json_ld = self.get_json(source)
+        urls = self.get_valid_urls(driver, source)
         pass
