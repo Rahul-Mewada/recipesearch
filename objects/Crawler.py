@@ -9,14 +9,15 @@ from selenium.webdriver.common.by import By
 import time
 
 class Crawler:
-    def __init__(self, seed_url):
+    def __init__(self, seed_url, path_constraint):
         self.seed_url = seed_url
         self.scheme, self.domain, self.path = utils.split_url(seed_url)
         self.robot_parser = RobotFileParser()
         self.robot_parser.set_url(utils.generate_url(self.scheme, self.domain, '/robots.txt'))
         self.robot_parser.read()
         self.visited_sites = set()
-
+        self.path_constraint = path_constraint
+    
     def get_driver(self):
         """
         Creates and returns a chrome web driver
@@ -66,11 +67,18 @@ class Crawler:
         the same domain as the seed url's domain.
         """
         link = utils.generate_url(link_scheme, link_domain, link_path)
-        if self.robot_parser.can_fetch("*", link) and \
-            link_domain == self.domain and not link in self.visited_sites:
+        if self.robot_parser.can_fetch("*", link) and link_domain == self.domain \
+            and self.in_path(link_path) and not link in self.visited_sites:
             return True
         return False
             
+    def in_path(self, link_path):
+        """
+        Return true if the seed_path is in the link_path
+        """
+        link_split = link_path.split('/')
+        constraint_split = self.path_constraint.split('/')
+        return link_split[1] == constraint_split[1]
 
     def search_for_recipe(self, json_ld):
         """
@@ -133,7 +141,6 @@ class Crawler:
             for neighbor in cur_neighbors:
                 to_visit.append(neighbor)
             end_time = time.time()
-            
             if end_time - start_time < self.robot_parser.crawl_delay("*"):
                 time.sleep(end_time - start_time)
             count += 1
