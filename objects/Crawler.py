@@ -6,14 +6,16 @@ import recipe as r
 import utils
 from urllib.robotparser import RobotFileParser
 from selenium.webdriver.common.by import By
+import time
 
 class Crawler:
     def __init__(self, seed_url):
+        self.seed_url = seed_url
         self.scheme, self.domain, self.path = utils.split_url(seed_url)
         self.robot_parser = RobotFileParser()
         self.robot_parser.set_url(utils.generate_url(self.scheme, self.domain, '/robots.txt'))
         self.robot_parser.read()
-        self.visited_paths = {}
+        self.visited_sites = set()
 
     def get_driver(self):
         """
@@ -44,27 +46,31 @@ class Crawler:
         """
         Returns all valid urls from an html source.
         """
+        print("Getting valid urls")
+        if not source:
+            print("Couldn't get urls from source")
+            return None
         web_elements = driver.find_elements(By.TAG_NAME, 'a')
-        links = []
+        urls = []
         for web_element in web_elements:
             link = web_element.get_attribute("href")
-            if self.valid_link(link):
-                links.append(link)
-        return links
+            if link:
+                link_scheme, link_domain, link_path = utils.split_url(link)
+                if self.valid_link(link_scheme, link_domain, link_path):
+                    urls.append(link)
+        return urls
     
-    def valid_link(self, link):
+    def valid_link(self, link_scheme, link_domain, link_path):
         """
         Returns true if a link is valid. Checks if a link is not blocked by robots.txt and if it has
         the same domain as the seed url's domain.
         """
-        print(link)
-        link_scheme, link_domain, link_path = utils.split_url(link)
-        if link and self.robot_parser.can_fetch("*", link) and \
-            link_domain == self.domain:
+        link = utils.generate_url(link_scheme, link_domain, link_path)
+        if self.robot_parser.can_fetch("*", link) and \
+            link_domain == self.domain and not link in self.visited_sites:
             return True
         return False
             
-
 
     def search_for_recipe(self, json_ld):
         """
@@ -89,12 +95,10 @@ class Crawler:
                         queue.append(ele)
         return None
                 
-    def return_recipe(self, url):
+    def return_recipe(self, driver, source, url):
         """
         Returns a recipe object from a particular url
         """
-        driver = self.get_driver()
-        source = self.get_source(driver, url)
         if not source:
             print("Couldnt extract HTML from " + url)
             return None
@@ -108,12 +112,29 @@ class Crawler:
         pp.pprint(vars(recipe))
         return recipe
 
-    def crawl(self, seed_url):
+    def crawl(self, database):
         """
-        Inserts recipies from a list of urls into a database
+        Initiates a bfs from the seed_url and crawls all valid neighboring urls while storing 
+        recipies into the database. 
         """
         driver = self.get_driver()
-        source = self.get_source(driver, seed_url)
-        json_ld = self.get_json(source)
-        urls = self.get_valid_urls(driver, source)
-        pass
+        to_visit = []
+        to_visit.append(self.seed_url)
+        count = 0
+        while to_visit and count < 10:
+            start_time = time.time()
+            cur_url = to_visit.pop()
+            cur_source = self.get_source(driver, cur_url)
+            recipe = self.return_recipe(driver, cur_source, cur_url)
+            self.visited_sites.add(cur_url)
+            if recipe:
+                database.insert_recipe(recipe)
+            cur_neighbors = self.get_valid_urls(driver, cur_source)
+            for neighbor in cur_neighbors:
+                to_visit.append(neighbor)
+            end_time = time.time()
+            
+            if end_time - start_time < self.robot_parser.crawl_delay("*"):
+                time.sleep(end_time - start_time)
+            count += 1
+        
