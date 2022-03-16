@@ -1,5 +1,5 @@
 import crawler as crawler
-import recipe 
+from recipe_objects import recipe
 from database import Database
 import utils
 

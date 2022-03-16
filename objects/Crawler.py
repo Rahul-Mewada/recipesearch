@@ -2,7 +2,7 @@ import extruct as ex
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import pprint as pp
-import recipe as r
+from recipe_objects import recipe as r
 import utils
 from urllib.robotparser import RobotFileParser
 from selenium.webdriver.common.by import By

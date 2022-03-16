@@ -2,7 +2,9 @@ from operator import contains
 from pydoc import describe
 from unicodedata import category, name
 import pprint as pp
-
+from author import Author
+from rating import Rating
+from image import Image
 
 class Recipe:
     def __init__(
@@ -37,17 +39,21 @@ class Recipe:
         self.cuisine = recipeCuisine
         self.ingredients = recipeIngredient
         self.instructions = recipeInstructions
-        self.rating = aggregateRating # TODO: create ratings object
+        self.rating = aggregateRating 
     
     def __init__(self, json_ld, url):
+        self.images = None
+        self.author = None
+        self.date_published = None
+        self.description = None
         self.prep_time = None
         self.cook_time = None
         self.total_time = None
         self.keywords = None
-        self.description = None
         self.servings = None
         self.category = None
         self.cuisine = None
+        self.rating = None
         for key in json_ld:
             content = json_ld.get(key)
             match key:
@@ -137,44 +143,6 @@ class Recipe:
         )
         return sql_args
 
-class Image:
-    def __init__(self, image_dict):
-        self.description = None
-        self.height = None
-        self.width = None
-        for key in image_dict:
-            value = image_dict.get(key)
-            match key:
-                case 'description':
-                    self.description = value
-                case 'height':
-                    self.height = value
-                case 'width':
-                    self.width = value
-                case 'url':
-                    self.url = value
-
-class Author:
-    def __init__(self, author_list):
-        author_dict = author_list[0]
-        for key in author_dict:
-            value = author_dict.get(key)
-            match key:
-                case 'name':
-                    self.name = value
-                case 'url':
-                    self.url = value
 
 
-class Rating:
-    def __init__(self, rating_dict):
-        self.count = None
-        self.value = None
-        if rating_dict.get('@type') == 'AggregateRating':
-            for key in rating_dict:
-                value = rating_dict.get(key)
-                match key:
-                    case 'ratingCount':
-                        self.count = value
-                    case 'ratingValue':
-                        self.value = value
+
