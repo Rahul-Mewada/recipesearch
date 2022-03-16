@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-
-import argparse
 import json
-import sys
 import subprocess
 import tempfile
 import os
@@ -22,10 +19,9 @@ def _convert_crf_output_to_json(crf_output):
     return json.dumps(utils.import_data(crf_output), indent=2, sort_keys=True)
 
 
-
 def parse_ingredients(ingredient_strs):
     cwd = os.getcwd()
-    model_path = cwd + '/model.crfmodel'
+    model_path = cwd + '/objects/ingredient_parser/model.crfmodel'
     crf_output = _exec_crf_test(ingredient_strs, model_path)
     print(_convert_crf_output_to_json(crf_output.split('\n')))
 

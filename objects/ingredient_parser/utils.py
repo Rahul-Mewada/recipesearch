@@ -1,6 +1,5 @@
 import re
-
-from ingredient_phrase_tagger.training import tokenizer
+import tokenizer
 
 
 def joinLine(columns):
