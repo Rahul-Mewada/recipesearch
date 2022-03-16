@@ -7,6 +7,7 @@ import utils
 from urllib.robotparser import RobotFileParser
 from selenium.webdriver.common.by import By
 import time
+import urllib
 
 class Crawler:
     def __init__(self, seed_url, path_constraint):
@@ -67,6 +68,8 @@ class Crawler:
         the same domain as the seed url's domain.
         """
         link = utils.generate_url(link_scheme, link_domain, link_path)
+        print(link)
+        print(self.robot_parser.can_fetch("*", link))
         if self.robot_parser.can_fetch("*", link) and link_domain == self.domain \
             and self.in_path(link_path) and not link in self.visited_sites:
             return True
@@ -141,7 +144,7 @@ class Crawler:
             for neighbor in cur_neighbors:
                 to_visit.append(neighbor)
             end_time = time.time()
-            if end_time - start_time < self.robot_parser.crawl_delay("*"):
+            if self.robot_parser.crawl_delay("*") and end_time - start_time < self.robot_parser.crawl_delay("*"):
                 time.sleep(end_time - start_time)
             count += 1
         

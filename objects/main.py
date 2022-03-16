@@ -4,7 +4,7 @@ from database import Database
 import utils
 
 def main():
-    c = crawler.Crawler('https://www.allrecipes.com/recipes/', "/recipe/")
+    c = crawler.Crawler('https://www.foodnetwork.com/recipes', "/recipes/")
     db = Database()
     c.crawl(db)
 
