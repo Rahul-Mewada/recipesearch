@@ -1,3 +1,4 @@
+
 class Rating:
     def __init__(self, rating_dict):
         self.count = None

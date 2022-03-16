@@ -1,3 +1,4 @@
+
 class Author:
     def __init__(self, author_list):
         author_dict = author_list[0]
