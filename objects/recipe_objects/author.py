@@ -1,7 +1,7 @@
 
 class Author:
     def __init__(self, author_list):
-        author_dict = author_list[0]
+        author_dict = author_list
         for key in author_dict:
             value = author_dict.get(key)
             match key:

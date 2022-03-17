@@ -1,10 +1,11 @@
+from ast import parse
 from operator import contains
 from pydoc import describe
 from unicodedata import category, name
 import pprint as pp
-from author import Author
-from rating import Rating
-from image import Image
+from ingredient_parser import parse_ingredients
+from recipe_objects.ingredient import Ingredient
+from recipe_objects import author, image, rating
 
 class Recipe:
     def __init__(
@@ -60,10 +61,12 @@ class Recipe:
                 case "name":
                     self.name = content
                 case "image":
-                    self.image = Image(content)
+                    self.image = image.Image(content)
                 case "author":
-                    if content[0].get('@type') == 'Person':
-                        self.author = Author(content)
+                    if type(content) == list:
+                        content = content[0]
+                    if content['@type'] == 'Person':
+                        self.author = author.Author(content)
                 case "datePublished":
                     self.date_published = content
                 case "description":
@@ -87,8 +90,9 @@ class Recipe:
                 case "recipeInstructions":
                     self.instructions = content
                 case "aggregateRating":
-                    self.rating = Rating(content)
+                    self.rating = rating.Rating(content)
         self.parse_instructions()
+        self.parse_ingredients()
         self.url = url
             
     def parse_instructions(self):
@@ -102,6 +106,20 @@ class Recipe:
 
         self.instructions = instruction_list
     
+    def parse_ingredients(self):
+        """
+        Takes a list of strings of ingredients and returns a list of ingredient 
+        objects
+        """
+        if not self.ingredients:
+            print("No ingredients found")
+        ingredient_list = []
+        ingredient_json = parse_ingredients.parse_ingredients(self.ingredients)
+        for json in ingredient_json:
+            ingredient = Ingredient(json)
+            ingredient_list.append(ingredient)
+        return ingredient_list
+
     def return_list_to_string(self, string_list):
         """
         Helper function to condense a list of strings to a single string seperated by *

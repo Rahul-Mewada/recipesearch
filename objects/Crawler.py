@@ -148,3 +148,7 @@ class Crawler:
                 time.sleep(end_time - start_time)
             count += 1
         
+    def get_recipe(self, url):
+        driver = self.get_driver()
+        source = self.get_source(driver, url)
+        return self.return_recipe(driver, source, url)

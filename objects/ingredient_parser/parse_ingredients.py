@@ -3,8 +3,9 @@ import json
 import subprocess
 import tempfile
 import os
-import utils
-
+from ingredient_parser import utils
+from ingredient_parser import tokenizer
+import pprint as pp
 
 def _exec_crf_test(input_text, model_path):
     with tempfile.NamedTemporaryFile(mode='w') as input_file:
@@ -16,14 +17,15 @@ def _exec_crf_test(input_text, model_path):
 
 
 def _convert_crf_output_to_json(crf_output):
-    return json.dumps(utils.import_data(crf_output), indent=2, sort_keys=True)
+    return utils.import_data(crf_output)
+    # return json.dumps(utils.import_data(crf_output), indent=2, sort_keys=True)
 
 
 def parse_ingredients(ingredient_strs):
     cwd = os.getcwd()
     model_path = cwd + '/objects/ingredient_parser/model.crfmodel'
     crf_output = _exec_crf_test(ingredient_strs, model_path)
-    print(_convert_crf_output_to_json(crf_output.split('\n')))
+    return(_convert_crf_output_to_json(crf_output.split('\n')))
 
 if __name__ == '__main__':
     ingredient_strs = ['2 kg ground beef', '300 pounds eggs']

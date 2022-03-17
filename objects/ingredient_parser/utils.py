@@ -1,5 +1,5 @@
 import re
-import tokenizer
+from ingredient_parser import tokenizer
 
 
 def joinLine(columns):
