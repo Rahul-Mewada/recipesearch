@@ -8,42 +8,9 @@ from recipe_objects.ingredient import Ingredient
 from recipe_objects import author, image, rating
 
 class Recipe:
-    def __init__(
-        self,
-        name,
-        image,
-        author,
-        datePublished,
-        description,
-        prepTime,
-        cookTime,
-        totalTime,
-        keywords,
-        recipeYield,
-        recipeCategory,
-        recipeCuisine,
-        recipeIngredient,
-        recipeInstructions,
-        aggregateRating
-    ):
-        self.name = name
-        self.images = image
-        self.author = author
-        self.date_published = datePublished
-        self.description = description
-        self.prep_time = prepTime
-        self.cook_time = cookTime
-        self.total_time = totalTime
-        self.keywords = keywords
-        self.servings = recipeYield
-        self.category = recipeCategory
-        self.cuisine = recipeCuisine
-        self.ingredients = recipeIngredient
-        self.instructions = recipeInstructions
-        self.rating = aggregateRating 
     
     def __init__(self, json_ld, url):
-        self.images = None
+        self.image = None
         self.author = None
         self.date_published = None
         self.description = None
@@ -118,7 +85,7 @@ class Recipe:
         for json in ingredient_json:
             ingredient = Ingredient(json)
             ingredient_list.append(ingredient)
-        return ingredient_list
+        self.ingredients = ingredient_list
 
     def return_list_to_string(self, string_list):
         """
@@ -132,35 +99,6 @@ class Recipe:
                 return_string += element + "*"
             print(return_string)
             return return_string
-
-    def to_sql(self):
-        """
-        Helper function to input Recipe into sql args
-        """
-        sql_args = (
-            self.name,
-            self.image.description,
-            self.image.height,
-            self.image.width,
-            self.image.url,
-            self.author.name,
-            self.author.url,
-            self.date_published,
-            self.description,
-            self.prep_time,
-            self.cook_time,
-            self.total_time,
-            self.return_list_to_string(self.keywords),
-            self.servings,
-            self.return_list_to_string(self.category),
-            self.return_list_to_string(self.cuisine),
-            self.return_list_to_string(self.ingredients),
-            self.return_list_to_string(self.instructions),
-            self.rating.count,
-            self.rating.value
-        )
-        return sql_args
-
 
 
 

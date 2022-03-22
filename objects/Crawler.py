@@ -120,7 +120,6 @@ class Crawler:
             return None
         print('Creating recipe object')
         recipe = r.Recipe(recipe_json_ld, url)
-        pp.pprint(vars(recipe))
         return recipe
 
     def crawl(self, database):
@@ -152,3 +151,9 @@ class Crawler:
         driver = self.get_driver()
         source = self.get_source(driver, url)
         return self.return_recipe(driver, source, url)
+
+    def get_recipe_json(self, url):
+        driver = self.get_driver()
+        source = self.get_source(driver, url)
+        json_ld = self.get_json(source)
+        return self.search_for_recipe(json_ld)

@@ -9,3 +9,9 @@ class Author:
                     self.name = value
                 case 'url':
                     self.url = value
+
+    def __str__(self):
+        return f"Author name: {self.name} \nAuthor url: {self.url}"
+    
+    def __repr__(self) -> str:
+        return f"Author name: {self.name} \nAuthor url: {self.url}"
