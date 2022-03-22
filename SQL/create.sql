@@ -1,77 +1,62 @@
--- IMAGES TABLE
--- @BLOCK
 CREATE TABLE Images (
     id INT PRIMARY KEY AUTO_INCREMENT,
     description TEXT,
     height INT,
     width INT,
     url VARCHAR(2083)
-)
---
+);
 
 
--- AUTHORS TABLE
--- @BLOCK
+
 CREATE TABLE Authors (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(64) NOT NULL,
     url VARCHAR(2083)
-)
---
+);
 
 
--- INGREDIENTS TABLE
--- @BLOCK
+
 CREATE TABLE Ingredients (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(64) NOT NULL UNIQUE
-)
---
+);
 
 
--- INSTRUCTIONS TABLE
--- @BLOCK 
+
 CREATE TABLE Instructions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     instruction TEXT NOT NULL
-)
---
+);
 
 
--- CUISINES TABLE
--- @BLOCK
+
+
 CREATE TABLE Cuisines (
     id INT PRIMARY KEY AUTO_INCREMENT,
     cuisine VARCHAR(64) NOT NULL UNIQUE
-)
---
+);
 
 
--- KEYWORDS TABLE
--- @BLOCK
+
 CREATE TABLE Keywords (
     id INT PRIMARY KEY AUTO_INCREMENT,
     keyword VARCHAR(64) NOT NULL UNIQUE
-)
---
+);
 
 
--- CATEGORIES TABLE
--- @BLOCK
+
 CREATE TABLE Categories (
     id INT PRIMARY KEY,
     category VARCHAR(64) NOT NULL UNIQUE
-)
---
+);
 
 
--- RECIPE TABLE
--- @BLOCK
+
 CREATE TABLE Recipies(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(128) NOT NULL,
-    imageId INT REFERENCES Images(id),
-    authorId INT REFERENCES Authors(id),
+    imageId INT,
+    authorId INT,
     datePublished DATETIME,
     description TEXT,
     prepTime VARCHAR(32),
@@ -81,97 +66,80 @@ CREATE TABLE Recipies(
     ratingCount INT,
     ratingValue FLOAT,
     url VARCHAR(255) NOT NULL UNIQUE,
-    urlHash BIGINT NOT NULL
-)
---
--- @BLOCK
-CREATE INDEX IX_Recipies_urlHash 
-ON Recipies(urlHash)
---
+    urlHash BIGINT NOT NULL,
+    FOREIGN KEY (imageId) REFERENCES Images(id),
+    FOREIGN KEY (authorId) REFERENCES Authors(id)
+);
+CREATE INDEX IX_Recipies_urlHash ON Recipies(urlHash);
 
 
--- RECIPE INSTRUCTIONS JUNCTION TABLE
---@BLOCK
 CREATE TABLE RecipeInstructions (
-    recipeId INT NOT NULL REFERENCES Recipies(id),
-    instructionId INT NOT NULL REFERENCES Instructions(id),
-    step INT NOT NULL
-)
---
--- @BLOCK
+    recipeId INT NOT NULL,
+    instructionId INT NOT NULL,
+    step INT NOT NULL,
+    FOREIGN KEY (recipeId) REFERENCES Recipies(id),
+    FOREIGN KEY (instructionId) REFERENCES Instructions(id),
+    UNIQUE `comp_const_RecipeInstructions` (recipeId, instructionId)
+);
 CREATE INDEX IX_RecipeInstructions_Recipe 
-ON RecipeInstructions(recipeId)
---
--- @BLOCK
+ON RecipeInstructions(recipeId);
 CREATE INDEX IX_RecipeInstructions_Instruction 
-ON RecipeInstructions(instructionId)
---
+ON RecipeInstructions(instructionId);
 
 
--- RECIPE INGREDIENTS JUNCTION TABLE
--- @BLOCK
+
 CREATE TABLE RecipeIngredients (
-    recipeId INT NOT NULL REFERENCES Recipies(id),
-    ingredientId INT NOT NULL REFERENCES Ingredients(id),
+    recipeId INT NOT NULL,
+    ingredientId INT NOT NULL,
     ingredientQty FLOAT,
-    ingredientUnit VARCHAR(32)
-)
---
--- @BLOCK
+    ingredientUnit VARCHAR(32),
+    FOREIGN KEY (recipeId) REFERENCES Recipies(id),
+    FOREIGN KEY (ingredientId) REFERENCES Ingredients(id),
+    UNIQUE `comp_const_RecipeIngredients` (recipeId, ingredientId)
+);
 CREATE INDEX IX_RecipeIngredients_Recipe
-ON RecipeIngredients(recipeId)
--- @BLOCK
+ON RecipeIngredients(recipeId);
 CREATE INDEX IX_RecipeIngredients_Ingredient
-ON RecipeIngredients(ingredientId)
---
+ON RecipeIngredients(ingredientId);
 
 
--- RECIPE CUISINES JUNCTION TABLE
---@BLOCK
+
 CREATE TABLE RecipeCuisines(
-    recipeId INT NOT NULL REFERENCES Recipe(id),
-    cuisineId INT NOT NULL REFERENCES Cuisines(id)
-)
---
---@BLOCK
+    recipeId INT NOT NULL,
+    cuisineId INT NOT NULL,
+    FOREIGN KEY (recipeId) REFERENCES Recipies(id),
+    FOREIGN KEY (cuisineId) REFERENCES Cuisines(id),
+    UNIQUE `comp_const_RecipeCuisines` (recipeId, cuisineId)
+);
 CREATE INDEX IX_RecipeCuisines_Recipe
-ON RecipeCuisines(recipeId)
---
---@BLOCK
+ON RecipeCuisines(recipeId);
 CREATE INDEX IX_RecipeCuisines_Cuisine
-ON RecipeCuisines(cuisineId)
---
+ON RecipeCuisines(cuisineId);
 
 
--- RECIPE KEYWORDS JUNCTION TABLE
---@BLOCK
+
 CREATE TABLE RecipeKeywords(
-    recipeId INT NOT NULL REFERENCES Recipies(id),
-    keywordId INT NOT NULL REFERENCES Keywords(id)
-)
---
---@BLOCK
+    recipeId INT NOT NULL,
+    keywordId INT NOT NULL,
+    FOREIGN KEY (recipeId) REFERENCES Recipies(id),
+    FOREIGN KEY (keywordId) REFERENCES Keywords(id),
+    UNIQUE `comp_const_RecipeKeywords` (recipeId, keywordId)
+);
 CREATE INDEX IX_RecipeKeywords_Recipe
-ON RecipeKeywords(recipeId)
---
---@BLOCK
+ON RecipeKeywords(recipeId);
 CREATE INDEX IX_RecipeKeywords_Keyword
-ON RecipeKeywords(keywordId)
---
+ON RecipeKeywords(keywordId);
 
 
--- RECIPE CATEGORIES JUNCTION TABLE
---@BLOCK
+
 CREATE TABLE RecipeCategories(
-    recipeId INT NOT NULL REFERENCES Recipies(id),
-    categoryId INT NOT NULL REFERENCES Categories(id)
-)
---
---@BLOCK
+    recipeId INT NOT NULL,
+    categoryId INT NOT NULL,
+    FOREIGN KEY (recipeId) REFERENCES Recipies(id),
+    FOREIGN KEY (categoryId) REFERENCES Categories(id),
+    UNIQUE `comp_const_RecipeCategories` (recipeId, categoryId)
+);
 CREATE INDEX IX_RecipeCategories_Recipe
-ON RecipeCategories(recipeId)
---
---@BLOCK
+ON RecipeCategories(recipeId);
 CREATE INDEX IX_RecipeCategories_Category
-ON RecipeCategories(categoryId)
---
+ON RecipeCategories(categoryId);
