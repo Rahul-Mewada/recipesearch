@@ -6,6 +6,7 @@ import pprint as pp
 from ingredient_parser import parse_ingredients
 from recipe_objects.ingredient import Ingredient
 from recipe_objects import author, image, rating
+import utils
 
 class Recipe:
     
@@ -59,7 +60,7 @@ class Recipe:
                 case "aggregateRating":
                     self.rating = rating.Rating(content)
         self.parse_instructions()
-        #self.parse_ingredients()
+        self.parse_ingredients()
         self.url = url
 
     def parse_instructions(self):
@@ -80,11 +81,15 @@ class Recipe:
         """
         if not self.ingredients:
             print("No ingredients found")
+        
+        self.ingredients = utils.vulger_to_numeric(self.ingredients)
+
         ingredient_list = []
         ingredient_json = parse_ingredients.parse_ingredients(self.ingredients)
         for json in ingredient_json:
             ingredient = Ingredient(json)
             ingredient_list.append(ingredient)
+
         self.ingredients = ingredient_list
 
     def return_list_to_string(self, string_list):

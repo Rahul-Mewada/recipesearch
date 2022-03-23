@@ -7,7 +7,6 @@ CREATE TABLE Images (
 );
 
 
-
 CREATE TABLE Authors (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(64) NOT NULL,
@@ -22,12 +21,16 @@ CREATE TABLE Ingredients (
 );
 
 
+CREATE TABLE Units (
+    id INT PRIMARY KET AUTO_INCREMENT,
+    name VARCHAR(32) NOT NULL
+);
+
 
 CREATE TABLE Instructions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     instruction TEXT NOT NULL
 );
-
 
 
 
@@ -92,9 +95,11 @@ CREATE TABLE RecipeIngredients (
     recipeId INT NOT NULL,
     ingredientId INT NOT NULL,
     ingredientQty FLOAT,
-    ingredientUnit VARCHAR(32),
+    ingredientUnit INT,
+    ingredientRaw VARCHAR(64),
     FOREIGN KEY (recipeId) REFERENCES Recipies(id),
     FOREIGN KEY (ingredientId) REFERENCES Ingredients(id),
+    FOREIGN KEY (ingredientUnit) REFERENCES Units(id),
     UNIQUE `comp_const_RecipeIngredients` (recipeId, ingredientId)
 );
 CREATE INDEX IX_RecipeIngredients_Recipe
