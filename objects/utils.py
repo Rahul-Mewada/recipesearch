@@ -1,4 +1,8 @@
+from multiprocessing.sharedctypes import Value
 from urllib.parse import urlparse
+import unicodedata
+
+from mysqlx import OperationalError
 
 def split_url(url):
     """
@@ -15,3 +19,27 @@ def generate_url(scheme, domain, path):
     Returns a valid url string using the scheme, domain and path
     """
     return scheme + "://" + domain + path
+
+def vulger_to_numeric(ingredients):
+    """
+    Helper function to convert unicode fractions to floats
+    """
+    parsed_ingredients = []
+    for ingredient in ingredients:
+        split_ingredients = ingredient.split(' ')
+        for j, split in enumerate(split_ingredients):
+            try:
+                if len(split) == 1:
+                    new_float = unicodedata.numeric(split)
+                elif split[-1].isdigit():
+                    new_float = float(split)
+                else:
+                    new_float = float(split[:-1]) + unicodedata.numeric(split[-1])
+            except:
+                continue
+            if new_float:
+                new_float = format(new_float, '.2f')
+                split_ingredients[j] = str(new_float)
+
+        parsed_ingredients.append(' '.join(split_ingredients))
+    return parsed_ingredients

@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from re import A
 import crawler as crawler
 from recipe_objects import recipe, image, author, ingredient, rating
@@ -6,6 +7,7 @@ import utils
 from test import TestDumper
 import redis
 import pprint as pp
+import unicodedata
 
 def main():
     # c = crawler.Crawler('https://www.foodnetwork.com/recipes', "/recipes/")
@@ -24,14 +26,11 @@ def main():
     conn = redis.Redis(host='localhost')
     td = TestDumper(url_list, conn)
     json_list = td.get_jsons()
-    print('***********************************************************')
+    recipies = []
     for recipe_json in json_list:
-        test_recipe = recipe.Recipe(recipe_json, url_list[0])
-        print()
-        print()
-        pp.pprint(vars(test_recipe))
-        print()
-        print()
+        recipies.append(recipe.Recipe(recipe_json, url_list[0]))
+
+    
     
 if __name__ == '__main__':
     main()

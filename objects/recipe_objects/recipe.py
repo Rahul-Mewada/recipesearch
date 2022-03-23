@@ -59,9 +59,9 @@ class Recipe:
                 case "aggregateRating":
                     self.rating = rating.Rating(content)
         self.parse_instructions()
-        self.parse_ingredients()
+        #self.parse_ingredients()
         self.url = url
-            
+
     def parse_instructions(self):
         """
         Takes the json data of instructions and parses and returns it as a list
