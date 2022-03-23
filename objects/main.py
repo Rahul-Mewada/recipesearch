@@ -8,6 +8,7 @@ from test import TestDumper
 import redis
 import pprint as pp
 import unicodedata
+import utils
 
 def main():
     # c = crawler.Crawler('https://www.foodnetwork.com/recipes', "/recipes/")
@@ -23,14 +24,14 @@ def main():
         "https://www.allrecipes.com/recipe/256610/grandmas-hungarian-stuffed-cabbage-slow-cooker-variation/",
         "https://www.allrecipes.com/recipe/21014/good-old-fashioned-pancakes/"
     ]
-    conn = redis.Redis(host='localhost')
-    td = TestDumper(url_list, conn)
-    json_list = td.get_jsons()
-    recipies = []
-    for recipe_json in json_list:
-        recipies.append(recipe.Recipe(recipe_json, url_list[0]))
-
-    
+    # conn = redis.Redis(host='localhost')
+    # td = TestDumper(url_list, conn)
+    # json_list = td.get_jsons()
+    # recipies = []
+    # for recipe_json in json_list:
+    #     recipies.append(recipe.Recipe(recipe_json, url_list[0]))
+    for url in url_list:
+        utils.crc_hash(url)
     
 if __name__ == '__main__':
     main()

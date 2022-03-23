@@ -1,7 +1,7 @@
 from multiprocessing.sharedctypes import Value
 from urllib.parse import urlparse
 import unicodedata
-
+import binascii
 from mysqlx import OperationalError
 
 def split_url(url):
@@ -43,3 +43,9 @@ def vulger_to_numeric(ingredients):
 
         parsed_ingredients.append(' '.join(split_ingredients))
     return parsed_ingredients
+
+def crc_hash(url):
+    data = url.encode()
+    url_hash = binascii.crc32(data) & 0xffffffff
+    print(url_hash)
+    return url_hash

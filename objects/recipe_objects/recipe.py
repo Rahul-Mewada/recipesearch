@@ -62,6 +62,7 @@ class Recipe:
         self.parse_instructions()
         self.parse_ingredients()
         self.url = url
+        self.url_hash = utils.crc_hash(url)
 
     def parse_instructions(self):
         """
