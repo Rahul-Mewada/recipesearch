@@ -22,11 +22,14 @@ def _convert_crf_output_to_json(crf_output):
 
 
 def parse_ingredients(ingredient_strs):
+    """
+    Takes a list of ingredients and returns a json containing the parsed ingredient names, quantities and units
+    """
     cwd = os.getcwd()
     model_path = cwd + '/objects/ingredient_parser/model.crfmodel'
     crf_output = _exec_crf_test(ingredient_strs, model_path)
     return(_convert_crf_output_to_json(crf_output.split('\n')))
 
 if __name__ == '__main__':
-    ingredient_strs = ['2 kg ground beef', '300 pounds eggs']
+    ingredient_strs = ['0.75 kg ground beef', '300 pounds eggs']
     parse_ingredients(ingredient_strs)
