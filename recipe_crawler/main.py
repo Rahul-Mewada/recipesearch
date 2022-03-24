@@ -1,13 +1,13 @@
 from multiprocessing.sharedctypes import Value
 from re import A
-import crawler as crawler
+from crawler import Crawler
 from models import recipe, image, author, ingredient, rating
 import utils
-from test import TestDumper
 import redis
 import pprint as pp
 import unicodedata
 import utils
+from client import Client
 
 def main():
     url_list = [
@@ -20,8 +20,10 @@ def main():
         "https://www.allrecipes.com/recipe/256610/grandmas-hungarian-stuffed-cabbage-slow-cooker-variation/",
         "https://www.allrecipes.com/recipe/21014/good-old-fashioned-pancakes/"
     ]
-    for url in url_list:
-        utils.crc_hash(url)
+    crawl = Crawler('https://www.allrecipes.com', '/recipe')
+    rest = Client('http://localhost:8000/recipies')
+    recipe_list = crawl.get_recipies(url_list)
+    print(recipe_list)
     
 if __name__ == '__main__':
     main()

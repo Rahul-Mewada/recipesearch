@@ -47,5 +47,4 @@ def vulger_to_numeric(ingredients):
 def crc_hash(url):
     data = url.encode()
     url_hash = binascii.crc32(data) & 0xffffffff
-    print(url_hash)
     return url_hash
