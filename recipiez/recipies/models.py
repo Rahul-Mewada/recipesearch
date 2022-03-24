@@ -50,7 +50,7 @@ class Recipe(models.Model):
     cook_time = models.CharField(max_length = 32, blank = True, null = True)
     total_time = models.CharField(max_length = 32, blank = True, null = True)
     # keywords = models.ManyToManyRel(Keyword)
-    servings = models.IntegerField(blank = True, null = True)
+    servings = models.CharField(max_length = 32, blank = True, null = True)
     # categories = models.ManyToManyRel(Category, blank = True)
     # cuisines = models.ManyToManyRel(Cuisine, blank = True)
     url = models.URLField(unique = True)
