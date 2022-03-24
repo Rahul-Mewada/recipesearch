@@ -122,6 +122,18 @@ class Crawler:
         recipe = r.Recipe(recipe_json_ld, url)
         return recipe
 
+    def get_recipies(self, url_list):
+        """
+        Returns a list of recipies from a list of urls
+        """
+        driver = self.get_driver()
+        recipe_list = []
+        for url in url_list:
+            source = self.get_source(driver, url)
+            recipe_list.append(self.return_recipe(driver, source, url))
+        return recipe_list
+
+
     def crawl(self, database):
         """
         Initiates a bfs from the seed_url and crawls all valid neighboring urls while storing 
@@ -147,13 +159,3 @@ class Crawler:
                 time.sleep(end_time - start_time)
             count += 1
         
-    def get_recipe(self, url):
-        driver = self.get_driver()
-        source = self.get_source(driver, url)
-        return self.return_recipe(driver, source, url)
-
-    def get_recipe_json(self, url):
-        driver = self.get_driver()
-        source = self.get_source(driver, url)
-        json_ld = self.get_json(source)
-        return self.search_for_recipe(json_ld)
