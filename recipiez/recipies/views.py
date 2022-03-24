@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework import generics
+from .models import Recipe
+from .serializers import RecipeSerialzer
 
-# Create your views here.
+class RecipeDetailAPIView(generics.RetrieveAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerialzer
+    lookup_field = 'pk'
