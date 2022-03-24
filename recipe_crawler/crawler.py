@@ -129,8 +129,12 @@ class Crawler:
         driver = self.get_driver()
         recipe_list = []
         for url in url_list:
+            start_time = time.time()
             source = self.get_source(driver, url)
             recipe_list.append(self.return_recipe(driver, source, url))
+            end_time = time.time()
+            if(end_time - start_time < 2):
+                time.sleep(2 - (end_time - start_time))
         return recipe_list
 
 
