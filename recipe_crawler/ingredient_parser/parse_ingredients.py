@@ -3,8 +3,7 @@ import json
 import subprocess
 import tempfile
 import os
-from ingredient_parser import utils
-from ingredient_parser import tokenizer
+from . import parse_utils as utils
 import pprint as pp
 
 def _exec_crf_test(input_text, model_path):
@@ -26,7 +25,7 @@ def parse_ingredients(ingredient_strs):
     Takes a list of ingredients and returns a json containing the parsed ingredient names, quantities and units
     """
     cwd = os.getcwd()
-    model_path = cwd + '/objects/ingredient_parser/model.crfmodel'
+    model_path = cwd + '/ingredient_parser/model.crfmodel'
     crf_output = _exec_crf_test(ingredient_strs, model_path)
     return(_convert_crf_output_to_json(crf_output.split('\n')))
 
