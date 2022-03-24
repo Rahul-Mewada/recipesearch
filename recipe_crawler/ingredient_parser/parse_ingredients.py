@@ -25,7 +25,7 @@ def parse_ingredients(ingredient_strs):
     Takes a list of ingredients and returns a json containing the parsed ingredient names, quantities and units
     """
     cwd = os.getcwd()
-    model_path = cwd + '/ingredient_parser/model.crfmodel'
+    model_path = '/Users/rahulmewada/code/python/crud_recipies/recipe_crawler/ingredient_parser/model.crfmodel'
     crf_output = _exec_crf_test(ingredient_strs, model_path)
     return(_convert_crf_output_to_json(crf_output.split('\n')))
 

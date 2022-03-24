@@ -27,13 +27,14 @@ class Recipe:
             match key:
                 case "name":
                     self.name = content
-                case "image":
-                    self.image = image.Image(content)
-                case "author":
-                    if type(content) == list:
-                        content = content[0]
-                    if content['@type'] == 'Person':
-                        self.author = author.Author(content)
+                # case "image":
+                #     self.image = image.Image(content)
+                #     pass
+                # case "author":
+                #     if type(content) == list:
+                #         content = content[0]
+                #     if content['@type'] == 'Person':
+                #         self.author = author.Author(content)
                 case "datePublished":
                     self.date_published = content
                 case "description":
@@ -44,22 +45,22 @@ class Recipe:
                     self.cook_time = content
                 case "totalTime":
                     self.total_time = content
-                case "keywords":
-                    self.keywords = content
+                # case "keywords":
+                #     self.keywords = content
                 case "recipeYield":
                     self.servings = content
-                case "recipeCategory":
-                    self.category = content
-                case "recipeCuisine":
-                    self.cuisine = content
-                case "recipeIngredient":
-                    self.ingredients = content
-                case "recipeInstructions":
-                    self.instructions = content
-                case "aggregateRating":
-                    self.rating = rating.Rating(content)
-        self.parse_instructions()
-        self.parse_ingredients()
+                # case "recipeCategory":
+                #     self.category = content
+                # case "recipeCuisine":
+                #     self.cuisine = content
+                # case "recipeIngredient":
+                #     self.ingredients = content
+                # case "recipeInstructions":
+                #     self.instructions = content
+                # case "aggregateRating":
+                #     self.rating = rating.Rating(content)
+        # self.parse_instructions()
+        # self.parse_ingredients()
         self.url = url
         self.url_hash = utils.crc_hash(url)
 
