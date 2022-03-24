@@ -92,18 +92,4 @@ class Recipe:
 
         self.ingredients = ingredient_list
 
-    def return_list_to_string(self, string_list):
-        """
-        Helper function to condense a list of strings to a single string seperated by *
-        """
-        if type(string_list) == str:
-            return string_list
-        elif type(string_list) == list:
-            return_string = ""
-            for element in string_list:
-                return_string += element + "*"
-            print(return_string)
-            return return_string
-
-
 
