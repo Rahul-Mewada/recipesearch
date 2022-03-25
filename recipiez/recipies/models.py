@@ -1,3 +1,5 @@
+from tkinter import CASCADE
+from django import urls
 from django.db import models
 
 # class Author(models.Model):
@@ -40,6 +42,13 @@ from django.db import models
 # class Category(models.Model):
 #     category = models.CharField(max_len = 64, db_index = True, unique = True)
 
+class VisitedUrl(models.Model):
+    url = models.URLField()
+    url_hash = models.BigIntegerField(db_index = True)
+
+    def __str__(self):
+        return self.url
+
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
     # image = models.OneToOneField(Image, blank = True)
@@ -53,8 +62,7 @@ class Recipe(models.Model):
     servings = models.CharField(max_length = 32, blank = True, null = True)
     # categories = models.ManyToManyRel(Category, blank = True)
     # cuisines = models.ManyToManyRel(Cuisine, blank = True)
-    url = models.URLField(unique = True)
-    url_hash = models.BigIntegerField(db_index = True)
+    url = models.OneToOneField(VisitedUrl, on_delete=models.CASCADE, unique=True)
 
     def __str__(self):
         return self.name
