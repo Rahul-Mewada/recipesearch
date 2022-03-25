@@ -15,11 +15,11 @@ class RecipeSerialzer(serializers.ModelSerializer):
             'cook_time',
             'total_time',
             'servings',
-            'url',
-            'url_hash'
+            'url'
         ]
+        depth = 1
 
-class VisistedUrlSerializer(serializers.ModelSerializer):
+class VisitedUrlSerializer(serializers.ModelSerializer):
     class Meta:
         model = VisitedUrl
         fields = [

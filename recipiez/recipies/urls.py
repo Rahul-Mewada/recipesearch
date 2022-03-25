@@ -1,8 +1,10 @@
 from django.urls import path
 from . import views
 
+#api/
 urlpatterns = [
-    path('<int:pk>', views.RecipeDetailAPIView.as_view()),
-    path('', views.RecipeListAPIView.as_view()),
-    path('add', views.RecipeCreateAPIView.as_view())
+    path('recipies/<int:pk>', views.RecipeDetailAPIView.as_view()),
+    path('recipies/', views.RecipeListAPIView.as_view()),
+    path('recipies/add', views.RecipeViewSet.as_view({'post' : 'list'})),
+    path('urls/', views.get_url_view)
 ]
