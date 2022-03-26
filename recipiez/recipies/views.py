@@ -35,6 +35,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             prep_time = recipe_data["prep_time"],
             cook_time = recipe_data["cook_time"],
             total_time = recipe_data["total_time"],
+            servings = recipe_data["servings"],
             url = url_instance
         )
 
@@ -42,7 +43,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe_instance.save()
 
         serializer = RecipeSerialzer(recipe_instance)
-        return Response(serializer)
+        return Response(serializer.data)
 
 @api_view(["GET"])
 def get_url_view(request, *args, **kwargs):
@@ -59,4 +60,4 @@ def get_url_view(request, *args, **kwargs):
         data = VisitedUrlSerializer(queryset, many=True).data
         if not data:
             return Response(data=[], status = 404)
-    return Response(data)
+    return Response(data, status = 200)

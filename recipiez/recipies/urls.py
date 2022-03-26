@@ -5,6 +5,6 @@ from . import views
 urlpatterns = [
     path('recipies/<int:pk>', views.RecipeDetailAPIView.as_view()),
     path('recipies/', views.RecipeListAPIView.as_view()),
-    path('recipies/add', views.RecipeViewSet.as_view({'post' : 'list'})),
+    path('recipies/add', views.RecipeViewSet.as_view({"post" : "create"})),
     path('urls/', views.get_url_view)
 ]
