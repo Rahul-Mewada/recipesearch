@@ -68,22 +68,8 @@ class Crawler:
         """
         url_scheme, url_domain, url_path = utils.split_url(url)
         print(url)
-        print(self.robot_parser.can_fetch("*", url))
         if self.robot_parser.can_fetch("*", url) and url_domain == self.domain \
-            and self._in_path(url_path) and not self.client.is_visisted(url):
-            return True
-        return False
-            
-    def is_valid(self, url):
-        """
-        Returns true if a link is valid. Checks if a link is not blocked by robots.txt and if it has
-        the same domain as the seed url's domain.
-        """
-        url_scheme, url_domain, url_path = utils.split_url(url)
-        print(url)
-        print(self.robot_parser.can_fetch("*", url))
-        if self.robot_parser.can_fetch("*", url) and url_domain == self.domain \
-            and self._in_path(url_path) and not self.client.is_visisted(url):
+            and self._in_path(url_path) and not self.client.is_visited(url):
             return True
         return False
 
@@ -156,14 +142,13 @@ class Crawler:
         crawl_delay = self.robot_parser.crawl_delay("*")
         for url in url_list:
             if self._is_valid(url):
-                start_time = time.time()
+                start_time = time.time()  
                 source = self._get_source(url)
                 recipe = self._return_recipe(source, url)
-                recipe_list.append(recipe)
+                self.client.add_recipe(recipe)
                 end_time = time.time()
                 if crawl_delay and end_time - start_time < crawl_delay:
                     time.sleep(crawl_delay - (end_time - start_time))
-        return recipe_list
 
     def crawl(self, database):
         """
@@ -185,7 +170,8 @@ class Crawler:
             for neighbor in cur_neighbors:
                 to_visit.append(neighbor)
             end_time = time.time()
-            if self.robot_parser.crawl_delay("*") and end_time - start_time < self.robot_parser.crawl_delay("*"):
+            if self.robot_parser.crawl_delay("*") and \
+                end_time - start_time < self.robot_parser.crawl_delay("*"):
                 time.sleep(end_time - start_time)
             count += 1
         

@@ -1,6 +1,9 @@
 from pprint import pprint
 import requests
 from utils import crc_hash
+from models import recipe
+import json
+from pprint import pprint
 
 class Client:
     def __init__(self, base_endpoint):
@@ -32,3 +35,17 @@ class Client:
         response = requests.get(endpoint, json=url_data)
 
         return response.status_code == 200
+
+    def add_recipe(self, recipe:recipe.Recipe):
+        """
+        Takes a recipe with an unvisited url and sends a post request to the recipe api
+        """
+        endpoint = self.base_endpoint + self.paths['add_recipe']
+        response = requests.post(endpoint, json=recipe.to_json())
+
+        print()
+        pprint(recipe.to_json())
+        print(response.status_code)
+        print()
+
+        return response.status_code

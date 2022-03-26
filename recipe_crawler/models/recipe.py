@@ -94,3 +94,18 @@ class Recipe:
         self.ingredients = ingredient_list
 
 
+    def to_json(self):
+        return dict(
+            name = self.name,
+            date_published = self.date_published,
+            description = self.description,
+            prep_time = self.prep_time,
+            cook_time = self.cook_time,
+            total_time = self.total_time,
+            servings = self.servings,
+            url = dict(
+                url = self.url,
+                url_hash = self.url_hash
+            )
+        )
+
