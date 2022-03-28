@@ -1,3 +1,4 @@
+from ast import keyword
 from tkinter import CASCADE
 from unittest.util import _MAX_LENGTH
 from django import urls
@@ -37,8 +38,11 @@ class Image(models.Model):
 # class Cuisine(models.Model):
 #     cuisine = models.CharField(max_len = 64, db_index = True, unique = True)
 
-# class Keyword(models.Model):
-#     keyword = models.CharField(max_len = 64, db_index = True, unique = True)
+class Keyword(models.Model):
+    keyword = models.CharField(max_length = 64, db_index = True, unique = True)
+
+    def __str__(self):
+        return self.keyword
 
 # class Category(models.Model):
 #     category = models.CharField(max_len = 64, db_index = True, unique = True)
@@ -68,7 +72,7 @@ class Recipe(models.Model):
     prep_time = models.CharField(max_length = 32, blank = True, null = True)
     cook_time = models.CharField(max_length = 32, blank = True, null = True)
     total_time = models.CharField(max_length = 32, blank = True, null = True)
-    # keywords = models.ManyToManyRel(Keyword)
+    keywords = models.ManyToManyField(Keyword)
     servings = models.CharField(max_length = 32, blank = True, null = True)
     # categories = models.ManyToManyRel(Category, blank = True)
     # cuisines = models.ManyToManyRel(Cuisine, blank = True)
