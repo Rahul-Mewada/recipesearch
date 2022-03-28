@@ -9,6 +9,7 @@ import unicodedata
 import utils
 from client import Client
 from json import dumps
+import yake
 
 def main():
     url_list = [
@@ -24,7 +25,10 @@ def main():
     client = Client('http://localhost:8000/api/')
     crawl = Crawler('https://www.allrecipes.com', '/recipe', client)
     
-    crawl.crawl_urls(url_list)
+    # crawl.crawl_urls(url_list)
+    crawl.get_recipies(url_list)
+
+
 
 if __name__ == '__main__':
     main()

@@ -6,6 +6,7 @@ import pprint as pp
 from ingredient_parser import parse_ingredients
 from . import author, image, rating, ingredient
 import utils
+import yake
 
 class Recipe:
     
@@ -60,6 +61,7 @@ class Recipe:
                     self.rating = rating.Rating(content)
         # self.parse_instructions()
         # self.parse_ingredients()
+        self.parse_keywords()
         self.url = url
         self.url_hash = utils.crc_hash(url)
 
@@ -91,6 +93,24 @@ class Recipe:
             ingredient_list.append(cur_ingredient)
 
         self.ingredients = ingredient_list
+
+    def parse_keywords(self):
+        """
+        Uses NLP to extract keywords from recipe name and description
+        """
+        if not self.keywords:
+            self.keywords = []
+            to_extract = self.name + '. ' + self.description
+            custom_kw_extractor = yake.KeywordExtractor(
+                lan = "en",
+                n = 1,
+                dedupLim=2,
+                top = 5,
+                features = None
+            )
+            extracted_keywords = custom_kw_extractor.extract_keywords(to_extract)
+            for _, keyword in extracted_keywords:
+                self.keywords.append(keyword)
 
 
     def to_json(self):
