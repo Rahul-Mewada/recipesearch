@@ -15,3 +15,9 @@ class Rating:
     
     def __repr__(self) -> str:
         return f"Rating value: {self.count}\nRating count: {self.value}"
+
+    def to_json(self):
+        return dict(
+            count = self.count,
+            value = self.value
+        )

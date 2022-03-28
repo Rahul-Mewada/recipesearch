@@ -32,7 +32,10 @@ class Client:
             "url_hash": url_hash
         }
         endpoint = self.base_endpoint + self.paths['get_url']
-        response = requests.get(endpoint, json=url_data)
+        try:
+            response = requests.get(endpoint, json=url_data)
+        except:
+            print("Could not establish connection")
 
         return response.status_code == 200
 

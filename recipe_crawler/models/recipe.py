@@ -56,8 +56,8 @@ class Recipe:
                 #     self.ingredients = content
                 # case "recipeInstructions":
                 #     self.instructions = content
-                # case "aggregateRating":
-                #     self.rating = rating.Rating(content)
+                case "aggregateRating":
+                    self.rating = rating.Rating(content)
         # self.parse_instructions()
         # self.parse_ingredients()
         self.url = url
@@ -110,6 +110,7 @@ class Recipe:
             url = dict(
                 url = self.url,
                 url_hash = self.url_hash
-            )
+            ),
+            rating = (self.rating.to_json() if self.rating else None)
         )
 
