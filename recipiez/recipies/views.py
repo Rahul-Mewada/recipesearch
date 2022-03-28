@@ -1,7 +1,7 @@
 from rest_framework import generics, viewsets
-from .models import Recipe, VisitedUrl, Image, Author
+from .models import Recipe, VisitedUrl, Image, Author, Rating
 from .serializers import RecipeSerialzer, VisitedUrlSerializer,\
-    ImageSerializer, AuthorSerializer
+    ImageSerializer, AuthorSerializer, RatingSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -25,6 +25,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_data = request.data["url"]
         image_data  = request.data["image"]
         author_data = request.data["author"]
+        rating_data = request.data["rating"]
 
         url_instance = VisitedUrl.objects.create(
             url = url_data["url"],
@@ -41,6 +42,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
             url = author_data["url"]
         )
 
+        rating_instance = Rating.objects.create(
+            count = rating_data["count"],
+            value = rating_data["value"]
+        )
+
         recipe_instance = Recipe.objects.create(
             name = recipe_data["name"],
             image = image_instance,
@@ -51,14 +57,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             cook_time = recipe_data["cook_time"],
             total_time = recipe_data["total_time"],
             servings = recipe_data["servings"],
-            url = url_instance
+            url = url_instance,
+            rating = rating_instance
         )
 
         url_instance.save()
         image_instance.save()
         author_instance.save()
         recipe_instance.save()
-
+        rating_instance.save()
+        
         serializer = RecipeSerialzer(recipe_instance)
         return Response(serializer.data)
 

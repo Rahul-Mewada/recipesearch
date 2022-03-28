@@ -50,10 +50,19 @@ class VisitedUrl(models.Model):
     def __str__(self):
         return self.url
 
+class Rating(models.Model):
+    count = models.IntegerField()
+    value = models.FloatField()
+
+    def __str__(self):
+        return str(self.value)
+
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
-    image = models.OneToOneField(Image, on_delete=models.CASCADE, blank = True, null = True)
-    author = models.OneToOneField(Author, on_delete=models.CASCADE ,blank = True, null = True)
+    image = models.OneToOneField(Image, on_delete=models.CASCADE,\
+         blank = True, null = True)
+    author = models.OneToOneField(Author, on_delete=models.CASCADE,\
+        blank = True, null = True)
     date_published = models.CharField(max_length = 32, blank = True, null = True)
     description = models.TextField(blank = True, null = True)
     prep_time = models.CharField(max_length = 32, blank = True, null = True)
@@ -64,6 +73,8 @@ class Recipe(models.Model):
     # categories = models.ManyToManyRel(Category, blank = True)
     # cuisines = models.ManyToManyRel(Cuisine, blank = True)
     url = models.OneToOneField(VisitedUrl, on_delete=models.CASCADE, unique=True)
+    rating = models.OneToOneField(Rating, on_delete=models.CASCADE, unique = True, \
+        blank=True, null=True)
 
     def __str__(self):
         return self.name

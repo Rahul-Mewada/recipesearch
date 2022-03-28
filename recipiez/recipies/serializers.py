@@ -1,6 +1,6 @@
 from html5lib import serialize
 from rest_framework import serializers
-from .models import Recipe, VisitedUrl, Author, Image
+from .models import Recipe, VisitedUrl, Author, Image, Rating
 
 class RecipeSerialzer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +15,8 @@ class RecipeSerialzer(serializers.ModelSerializer):
             'cook_time',
             'total_time',
             'servings',
-            'url'
+            'url',
+            'rating'
         ]
         depth = 1
 
@@ -43,4 +44,12 @@ class ImageSerializer(serializers.ModelSerializer):
             'width',
             'caption',
             'url'
+        ]
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = [
+            'count',
+            'value'
         ]
