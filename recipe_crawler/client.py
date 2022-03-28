@@ -38,7 +38,8 @@ class Client:
 
     def add_recipe(self, recipe:recipe.Recipe):
         """
-        Takes a recipe with an unvisited url and sends a post request to the recipe api
+        Takes a recipe with an unvisited url and sends a post request
+        to the recipe api
         """
         endpoint = self.base_endpoint + self.paths['add_recipe']
         response = requests.post(endpoint, json=recipe.to_json())

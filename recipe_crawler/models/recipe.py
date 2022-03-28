@@ -27,14 +27,13 @@ class Recipe:
             match key:
                 case "name":
                     self.name = content
-                # case "image":
-                #     self.image = image.Image(content)
-                #     pass
-                # case "author":
-                #     if type(content) == list:
-                #         content = content[0]
-                #     if content['@type'] == 'Person':
-                #         self.author = author.Author(content)
+                case "image":
+                    self.image = image.Image(content)
+                case "author":
+                    if type(content) == list:
+                        content = content[0]
+                    if content['@type'] == 'Person':
+                        self.author = author.Author(content)
                 case "datePublished":
                     self.date_published = content
                 case "description":
@@ -95,8 +94,13 @@ class Recipe:
 
 
     def to_json(self):
+        """
+        Returns a python dict of the current recipe instance
+        """
         return dict(
             name = self.name,
+            image = (self.image.to_json() if self.image else None),
+            author = (self.author.to_json() if self.author else None),
             date_published = self.date_published,
             description = self.description,
             prep_time = self.prep_time,

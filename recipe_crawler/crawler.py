@@ -145,7 +145,7 @@ class Crawler:
                 start_time = time.time()  
                 source = self._get_source(url)
                 recipe = self._return_recipe(source, url)
-                self.client.add_recipe(recipe)
+                # self.client.add_recipe(recipe)
                 end_time = time.time()
                 if crawl_delay and end_time - start_time < crawl_delay:
                     time.sleep(crawl_delay - (end_time - start_time))

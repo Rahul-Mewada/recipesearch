@@ -15,3 +15,9 @@ class Author:
     
     def __repr__(self) -> str:
         return f"Author name: {self.name} \nAuthor url: {self.url}"
+
+    def to_json(self):
+        return dict(
+            name = self.name,
+            url = self.url
+        )

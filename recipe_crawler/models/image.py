@@ -3,12 +3,12 @@ class Image:
     def __init__(self, image_dict):
         self.height = None
         self.width = None
-        self.description = None
+        self.caption = None
         for key in image_dict:
             value = image_dict.get(key)
             match key:
-                case 'description':
-                    self.description = value
+                case 'caption':
+                    self.caption = value
                 case 'height':
                     self.height = value
                 case 'width':
@@ -17,7 +17,15 @@ class Image:
                     self.url = value
 
     def __str__(self):
-        return f"Image url: {self.url} \nImage description: {self.description} \nHeight: {self.height} Width: {self.width}"
+        return self.url
     
     def __repr__(self) -> str:
-        return f"Image url: {self.url} \nImage description: {self.description} \nHeight: {self.height} Width: {self.width}"
+        return self.url
+
+    def to_json(self):
+        return dict(
+            height = self.height,
+            width = self.width,
+            caption = self.caption,
+            url = self.url
+        )
