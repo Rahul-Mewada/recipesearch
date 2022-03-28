@@ -1,28 +1,29 @@
 from tkinter import CASCADE
+from unittest.util import _MAX_LENGTH
 from django import urls
 from django.db import models
 
-# class Author(models.Model):
-#     name = models.CharField(max_len = 64)
-#     url = models.URLField()
+class Author(models.Model):
+    name = models.CharField(max_length=64)
+    url = models.URLField()
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
     
-#     def __repr__(self):
-#         return self.name
+    def __repr__(self):
+        return self.name
 
-# class Image(models.Model):
-#     height = models.IntegerField(blank = True)
-#     width = models.IntegerField(blank = True)
-#     caption = models.TextField(blank = True)
-#     url = models.URLField()
+class Image(models.Model):
+    height = models.IntegerField(blank = True, null = True)
+    width = models.IntegerField(blank = True, null = True)
+    caption = models.TextField(blank = True, null = True)
+    url = models.URLField()
 
-#     def __str__(self):
-#         return self.url
+    def __str__(self):
+        return self.url
     
-#     def __repr__(self):
-#         return self.url
+    def __repr__(self):
+        return self.url
 
 # class IngredientName(models.Model):
 #     name = models.CharField(max_len = 64, db_index = True, unique = True)
@@ -51,8 +52,8 @@ class VisitedUrl(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
-    # image = models.OneToOneField(Image, blank = True)
-    # author = models.OneToOneField(Author, blank = True)
+    image = models.OneToOneField(Image, on_delete=models.CASCADE, blank = True, null = True)
+    author = models.OneToOneField(Author, on_delete=models.CASCADE ,blank = True, null = True)
     date_published = models.CharField(max_length = 32, blank = True, null = True)
     description = models.TextField(blank = True, null = True)
     prep_time = models.CharField(max_length = 32, blank = True, null = True)
