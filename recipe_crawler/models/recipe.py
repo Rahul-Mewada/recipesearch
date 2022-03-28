@@ -45,8 +45,8 @@ class Recipe:
                     self.cook_time = content
                 case "totalTime":
                     self.total_time = content
-                # case "keywords":
-                #     self.keywords = content
+                case "keywords":
+                    self.keywords = content
                 case "recipeYield":
                     self.servings = content
                 # case "recipeCategory":
@@ -112,7 +112,6 @@ class Recipe:
             for _, keyword in extracted_keywords:
                 self.keywords.append(keyword)
 
-
     def to_json(self):
         """
         Returns a python dict of the current recipe instance
@@ -123,6 +122,7 @@ class Recipe:
             author = (self.author.to_json() if self.author else None),
             date_published = self.date_published,
             description = self.description,
+            keywords = self.keywords,
             prep_time = self.prep_time,
             cook_time = self.cook_time,
             total_time = self.total_time,
