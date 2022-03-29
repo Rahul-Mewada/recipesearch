@@ -38,6 +38,28 @@ class Image(models.Model):
 # class Cuisine(models.Model):
 #     cuisine = models.CharField(max_len = 64, db_index = True, unique = True)
 
+class IngredientName(models.Model):
+    name = models.CharField(max_length=64, db_index=True, unique=True)
+    
+    def __str__(self):
+        return self.name
+
+class IngredientUnit(models.Model):
+    unit = models.CharField(max_length=32, db_index=True, unique=True)
+
+    def __str__(self):
+        return self.unit
+
+class Ingredient(models.Model):
+    name = models.ForeignKey(IngredientName, on_delete=models.CASCADE)
+    unit = models.ForeignKey(IngredientUnit, on_delete=models.CASCADE,\
+        blank=True, null=True)
+    quantity = models.FloatField(blank=True, null=True)
+    raw = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.raw
+        
 class Keyword(models.Model):
     keyword = models.CharField(max_length = 64, db_index = True, unique = True)
 

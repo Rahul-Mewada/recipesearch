@@ -8,5 +8,6 @@ urlpatterns = [
     path('recipies/add', views.RecipeAPIView.as_view()),
     path('urls/', views.get_url_view),
     path('urls/create', views.VisitedUrlCreateAPIView.as_view()),
-    path('keywords/', views.KeywordListAPIView.as_view())
+    path('keywords/', views.KeywordListAPIView.as_view()),
+    path('ingredients/', views.IngredientAPIView.as_view())
 ]

@@ -1,7 +1,7 @@
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
-from .models import Recipe, VisitedUrl, Image, Author, Rating, Keyword
-from .serializers import KeywordRecipeSerializer, KeywordSerializer, RecipeSerialzer, VisitedUrlSerializer,\
+from .models import Recipe, VisitedUrl, Image, Author, Rating, Keyword, Ingredient
+from .serializers import IngredientSerializer, KeywordRecipeSerializer, KeywordSerializer, RecipeSerialzer, VisitedUrlSerializer,\
     ImageSerializer, AuthorSerializer, RatingSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -39,6 +39,18 @@ class RecipeAPIView(APIView):
         print("Not valid")
         return Response(status=400)
 
+class IngredientAPIView(APIView):
+    def get(self, format=None):
+        queryset = Ingredient.objects.all()
+        serializer = IngredientSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = IngredientSerializer(data = request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.create(validated_data=request.data)
+            return Response(serializer.data, status=201)
+        return Response(status=400)
 
 @api_view(["GET"])
 def get_url_view(request, *args, **kwargs):

@@ -1,8 +1,10 @@
 from copy import copy
+from urllib.parse import SplitResultBytes
 from html5lib import serialize
 from rest_framework import serializers, validators
-from .models import Recipe, VisitedUrl, Author, Image, Rating, Keyword
+from .models import Ingredient, IngredientName, IngredientUnit, Recipe, VisitedUrl, Author, Image, Rating, Keyword
 from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
+from django.core.exceptions import ObjectDoesNotExist
 class VisitedUrlSerializer(serializers.ModelSerializer):
     class Meta:
         model = VisitedUrl
@@ -52,6 +54,56 @@ class KeywordRecipeSerializer(serializers.ModelSerializer):
             'keyword',
             'recipies'
         ]
+
+class CreatableSlugRelatedField(serializers.SlugRelatedField):
+    
+    def to_internal_value(self, data):
+        try:
+            return self.get_queryset().get_or_create(**{self.slug_field: data})[0]
+        except ObjectDoesNotExist:
+            self.fail('does_not_exist', slug_name=self.slug_field, value=data)
+        except (TypeError, ValueError):
+            self.fail('invalid')
+
+
+class IngredientNameSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    class Meta:
+        model = IngredientName
+        fields = [
+            'name'
+        ]
+
+class IngredientUnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    class Meta:
+        model = IngredientUnit
+        fields = [
+            'unit'
+        ]
+
+class IngredientSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(max_length=64)
+    unit = serializers.CharField(max_length=32, allow_blank = True)
+    
+    class Meta:
+        model = Ingredient
+        fields = [
+            'name',
+            'unit',
+            'quantity',
+            'raw'
+        ]
+
+    def create(self, validated_data):
+        name = validated_data.pop('name')
+        unit = validated_data.pop('unit')
+        ingredient_name, created = IngredientName.objects.get_or_create(name=name)
+        ingredient_unit, created = IngredientUnit.objects.get_or_create(unit=unit)
+        ingredient = Ingredient.objects.create(
+            name = ingredient_name,
+            unit = ingredient_unit,
+            **validated_data
+        )
+
 
 class RecipeSerialzer(serializers.ModelSerializer):
     url = VisitedUrlSerializer(many = False)
