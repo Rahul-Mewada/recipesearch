@@ -2,7 +2,7 @@ from copy import copy
 from html5lib import serialize
 from rest_framework import serializers, validators
 from .models import Recipe, VisitedUrl, Author, Image, Rating, Keyword
-
+from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
 class VisitedUrlSerializer(serializers.ModelSerializer):
     class Meta:
         model = VisitedUrl
@@ -37,11 +37,13 @@ class RatingSerializer(serializers.ModelSerializer):
             'value'
         ]
 
-class KeywordSerializer(serializers.ModelSerializer):
+class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    recipe_set = serializers.StringRelatedField(many=True)
     class Meta:
         model = Keyword
         fields = [
-            'keyword'
+            'keyword',
+            'recipe_set'
         ]
 
 class RecipeSerialzer(serializers.ModelSerializer):
@@ -50,7 +52,6 @@ class RecipeSerialzer(serializers.ModelSerializer):
     image = ImageSerializer(many = False)
     rating = RatingSerializer(many = False)
     keywords = KeywordSerializer(many = True)
-    unchecked_validators = []
 
     class Meta:
         model = Recipe

@@ -1,11 +1,11 @@
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from .models import Recipe, VisitedUrl, Image, Author, Rating, Keyword
-from .serializers import RecipeSerialzer, VisitedUrlSerializer,\
+from .serializers import KeywordSerializer, RecipeSerialzer, VisitedUrlSerializer,\
     ImageSerializer, AuthorSerializer, RatingSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
 class RecipeDetailAPIView(generics.RetrieveAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerialzer
@@ -15,62 +15,9 @@ class RecipeListAPIView(generics.ListAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerialzer
 
-# class RecipeViewSet(viewsets.ModelViewSet):
-#     serializer_class = RecipeSerialzer
-
-#     def get_queryset(self):
-#         return Recipe.objects.all()
-
-#     def create(self, request, *args, **kwargs):
-#         recipe_data = request.data
-#         url_data = request.data["url"]
-#         image_data  = request.data["image"]
-#         author_data = request.data["author"]
-#         rating_data = request.data["rating"]
-
-#         url_instance = VisitedUrl.objects.create(
-#             url = url_data["url"],
-#             url_hash = url_data["url_hash"]
-#         )
-
-#         image_instance = Image.objects.create(
-#             height = image_data["height"],
-#             width = image_data["width"],
-#             caption = image_data["caption"],
-#             url = image_data["url"]
-#         )
-#         author_instance = Author.objects.create(
-#             name = author_data["name"],
-#             url = author_data["url"]
-#         )
-
-#         rating_instance = Rating.objects.create(
-#             count = rating_data["count"],
-#             value = rating_data["value"]
-#         )
-
-#         recipe_instance = Recipe.objects.create(
-#             name = recipe_data["name"],
-#             image = image_instance,
-#             author = author_instance,
-#             date_published = recipe_data["date_published"],
-#             description = recipe_data["description"],
-#             prep_time = recipe_data["prep_time"],
-#             cook_time = recipe_data["cook_time"],
-#             total_time = recipe_data["total_time"],
-#             servings = recipe_data["servings"],
-#             url = url_instance,
-#             rating = rating_instance
-#         )
-
-#         url_instance.save()
-#         image_instance.save()
-#         author_instance.save()
-#         recipe_instance.save()
-#         rating_instance.save() 
-
-#         serializer = RecipeSerialzer(recipe_instance)
-#         return Response(serializer.data)
+class KeywordListAPIView(generics.ListAPIView):
+    queryset = Keyword.objects.all()
+    serializer_class = KeywordSerializer
 
 class RecipeAPIView(APIView):
     def get(self, format=None):
