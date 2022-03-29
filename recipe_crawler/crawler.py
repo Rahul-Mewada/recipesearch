@@ -68,10 +68,11 @@ class Crawler:
         """
         url_scheme, url_domain, url_path = utils.split_url(url)
         print(url)
+        is_visited = self.client.is_visited(url)
         if self.robot_parser.can_fetch("*", url) and url_domain == self.domain \
-            and self._in_path(url_path) and not self.client.is_visited(url):
-            return True
-        return False
+            and self._in_path(url_path) and not is_visited:
+            return (True, is_visited)
+        return (False, is_visited)
 
     def _in_path(self, link_path):
         """
@@ -141,15 +142,20 @@ class Crawler:
         recipe_list = []
         crawl_delay = self.robot_parser.crawl_delay("*")
         for url in url_list:
-            if self._is_valid(url):
+            is_valid, is_visited = self._is_valid(url)
+            if is_valid:
                 start_time = time.time()  
                 source = self._get_source(url)
                 recipe = self._return_recipe(source, url)
                 if recipe:
                     self.client.add_recipe(recipe)
+                elif not is_visited:
+                    self.client.add_url(url)
                 end_time = time.time()
                 if crawl_delay and end_time - start_time < crawl_delay:
                     time.sleep(crawl_delay - (end_time - start_time))
+            elif not is_visited:
+                self.client.add_url(url)
 
     def crawl(self, database):
         """

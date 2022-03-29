@@ -91,7 +91,6 @@ class Recipe:
         for json in ingredient_json:
             cur_ingredient = ingredient.Ingredient(json)
             ingredient_list.append(cur_ingredient)
-
         self.ingredients = ingredient_list
 
     def parse_keywords(self):
@@ -122,7 +121,7 @@ class Recipe:
             author = (self.author.to_json() if self.author else None),
             date_published = self.date_published,
             description = self.description,
-            keywords = self.keywords,
+            keywords = self.keyword_to_json(),
             prep_time = self.prep_time,
             cook_time = self.cook_time,
             total_time = self.total_time,
@@ -134,3 +133,8 @@ class Recipe:
             rating = (self.rating.to_json() if self.rating else None)
         )
 
+    def keyword_to_json(self):
+        keyword_data = []
+        for keyword in self.keywords:
+            keyword_data.append({"keyword" : keyword})
+        return keyword_data
