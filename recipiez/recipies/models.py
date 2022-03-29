@@ -6,7 +6,7 @@ from django.db import models
 
 class Author(models.Model):
     name = models.CharField(max_length=64)
-    url = models.URLField()
+    url = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
@@ -18,7 +18,7 @@ class Image(models.Model):
     height = models.IntegerField(blank = True, null = True)
     width = models.IntegerField(blank = True, null = True)
     caption = models.TextField(blank = True, null = True)
-    url = models.URLField()
+    url = models.URLField(max_length=400)
 
     def __str__(self):
         return self.url
@@ -48,7 +48,7 @@ class Keyword(models.Model):
 #     category = models.CharField(max_len = 64, db_index = True, unique = True)
 
 class VisitedUrl(models.Model):
-    url = models.URLField()
+    url = models.URLField(max_length=400)
     url_hash = models.BigIntegerField(db_index = True)
 
     def __str__(self):
