@@ -72,7 +72,7 @@ class Recipe(models.Model):
     prep_time = models.CharField(max_length = 32, blank = True, null = True)
     cook_time = models.CharField(max_length = 32, blank = True, null = True)
     total_time = models.CharField(max_length = 32, blank = True, null = True)
-    keywords = models.ManyToManyField(Keyword)
+    keywords = models.ManyToManyField(Keyword, related_name='recipies')
     servings = models.CharField(max_length = 32, blank = True, null = True)
     # categories = models.ManyToManyRel(Category, blank = True)
     # cuisines = models.ManyToManyRel(Cuisine, blank = True)

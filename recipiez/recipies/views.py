@@ -1,11 +1,12 @@
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from .models import Recipe, VisitedUrl, Image, Author, Rating, Keyword
-from .serializers import KeywordSerializer, RecipeSerialzer, VisitedUrlSerializer,\
+from .serializers import KeywordRecipeSerializer, KeywordSerializer, RecipeSerialzer, VisitedUrlSerializer,\
     ImageSerializer, AuthorSerializer, RatingSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
+
 class RecipeDetailAPIView(generics.RetrieveAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerialzer
@@ -17,7 +18,11 @@ class RecipeListAPIView(generics.ListAPIView):
 
 class KeywordListAPIView(generics.ListAPIView):
     queryset = Keyword.objects.all()
-    serializer_class = KeywordSerializer
+    serializer_class = KeywordRecipeSerializer
+
+class VisitedUrlCreateAPIView(generics.CreateAPIView):
+    queryset = VisitedUrl.objects.all()
+    serializer_class = VisitedUrlSerializer
 
 class RecipeAPIView(APIView):
     def get(self, format=None):
@@ -28,8 +33,10 @@ class RecipeAPIView(APIView):
     def post(self, request):
         serializer = RecipeSerialzer(data=request.data)
         if serializer.is_valid(raise_exception=True):
+            print("Valid")
             serializer.create(validated_data=request.data)
             return Response(serializer.data, status=201)
+        print("Not valid")
         return Response(status=400)
 
 

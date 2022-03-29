@@ -38,12 +38,19 @@ class RatingSerializer(serializers.ModelSerializer):
         ]
 
 class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    recipe_set = serializers.StringRelatedField(many=True)
+    class Meta:
+        model = Keyword
+        fields = [
+            'keyword'
+        ]
+
+class KeywordRecipeSerializer(serializers.ModelSerializer):
+    recipies = serializers.StringRelatedField(many=True)
     class Meta:
         model = Keyword
         fields = [
             'keyword',
-            'recipe_set'
+            'recipies'
         ]
 
 class RecipeSerialzer(serializers.ModelSerializer):
