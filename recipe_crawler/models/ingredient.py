@@ -23,3 +23,11 @@ class Ingredient:
 
     def __repr__(self):
         return f"{self.name} - {self.quantity} {self.unit}"
+
+    def to_json(self):
+        return dict(
+            name = self.name,
+            unit = self.unit,
+            quantity = self.quantity,
+            raw = self.raw
+        )
