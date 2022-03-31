@@ -1,11 +1,11 @@
-from rest_framework import generics, viewsets
+from typing import List
+from rest_framework import generics
 from rest_framework.views import APIView
-from .models import Recipe, VisitedUrl, Image, Author, Rating, Keyword, Ingredient
-from .serializers import IngredientSerializer, KeywordRecipeSerializer, KeywordSerializer, RecipeSerialzer, VisitedUrlSerializer,\
-    ImageSerializer, AuthorSerializer, RatingSerializer
+from .models import IngredientName, Recipe, VisitedUrl, Keyword, Ingredient
+from .serializers import IngredientNameSerializer, IngredientSerializer, KeywordRecipeSerializer, RecipeSerialzer, VisitedUrlSerializer,\
+     RecipeViewSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from drf_writable_nested.mixins import UniqueFieldsMixin, NestedCreateMixin
 
 class RecipeDetailAPIView(generics.RetrieveAPIView):
     queryset = Recipe.objects.all()
@@ -14,7 +14,7 @@ class RecipeDetailAPIView(generics.RetrieveAPIView):
 
 class RecipeListAPIView(generics.ListAPIView):
     queryset = Recipe.objects.all()
-    serializer_class = RecipeSerialzer
+    serializer_class = RecipeViewSerializer
 
 class KeywordListAPIView(generics.ListAPIView):
     queryset = Keyword.objects.all()
@@ -27,7 +27,7 @@ class VisitedUrlCreateAPIView(generics.CreateAPIView):
 class RecipeAPIView(APIView):
     def get(self, format=None):
         queryset = Recipe.objects.all()
-        serializer = RecipeSerialzer(queryset, many=True)
+        serializer = RecipeViewSerializer(queryset, many=True)
         return Response(serializer.data)
     
     def post(self, request):

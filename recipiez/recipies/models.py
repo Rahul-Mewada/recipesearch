@@ -50,15 +50,6 @@ class IngredientUnit(models.Model):
     def __str__(self):
         return self.unit
 
-class Ingredient(models.Model):
-    name = models.ForeignKey(IngredientName, on_delete=models.CASCADE)
-    unit = models.ForeignKey(IngredientUnit, on_delete=models.CASCADE,\
-        blank=True, null=True)
-    quantity = models.FloatField(blank=True, null=True)
-    raw = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.raw
         
 class Keyword(models.Model):
     keyword = models.CharField(max_length = 64, db_index = True, unique = True)
@@ -108,6 +99,17 @@ class Recipe(models.Model):
     def __repr__(self):
         return self.name
 
+class Ingredient(models.Model):
+    name = models.ForeignKey(IngredientName, on_delete=models.CASCADE)
+    unit = models.ForeignKey(IngredientUnit, on_delete=models.CASCADE,\
+        blank=True, null=True)
+    quantity = models.FloatField(blank=True, null=True)
+    raw = models.CharField(max_length=100)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, \
+        related_name='ingredients', blank=True, null=True)
+
+    def __str__(self):
+        return self.raw
 # class RecipeInstructions(models.Model):
 #     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, db_index = True)
 #     instruction = models.ForeignKey(Instruction, on_delete=models.CASCADE, db_index = True)

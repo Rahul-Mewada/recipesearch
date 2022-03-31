@@ -9,5 +9,6 @@ urlpatterns = [
     path('urls/', views.get_url_view),
     path('urls/create', views.VisitedUrlCreateAPIView.as_view()),
     path('keywords/', views.KeywordListAPIView.as_view()),
-    path('ingredients/', views.IngredientAPIView.as_view())
+    path('ingredients/', views.IngredientAPIView.as_view()),
+    path('recipies/search/', views.get_recipe_from_ingredient)
 ]
