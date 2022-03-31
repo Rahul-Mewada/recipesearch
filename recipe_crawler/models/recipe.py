@@ -1,3 +1,5 @@
+import sys
+sys.path.append("..")
 from ast import parse
 from operator import contains
 from pydoc import describe
@@ -53,14 +55,14 @@ class Recipe:
                 #     self.category = content
                 # case "recipeCuisine":
                 #     self.cuisine = content
-                # case "recipeIngredient":
-                #     self.ingredients = content
+                case "recipeIngredient":
+                    self.ingredients = content
                 # case "recipeInstructions":
                 #     self.instructions = content
                 case "aggregateRating":
                     self.rating = rating.Rating(content)
         # self.parse_instructions()
-        # self.parse_ingredients()
+        self.parse_ingredients()
         self.parse_keywords()
         self.url = url
         self.url_hash = utils.crc_hash(url)
@@ -125,6 +127,7 @@ class Recipe:
             prep_time = self.prep_time,
             cook_time = self.cook_time,
             total_time = self.total_time,
+            ingredients = [ingredient.to_json() for ingredient in self.ingredients],
             servings = self.servings,
             url = dict(
                 url = self.url,
