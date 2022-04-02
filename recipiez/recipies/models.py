@@ -100,7 +100,8 @@ class Recipe(models.Model):
         return self.name
 
 class Ingredient(models.Model):
-    name = models.ForeignKey(IngredientName, on_delete=models.CASCADE)
+    name = models.ForeignKey(IngredientName, on_delete=models.CASCADE, \
+        blank=True, null=True)
     unit = models.ForeignKey(IngredientUnit, on_delete=models.CASCADE,\
         blank=True, null=True)
     quantity = models.FloatField(blank=True, null=True)
