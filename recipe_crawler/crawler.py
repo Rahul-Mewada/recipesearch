@@ -7,8 +7,9 @@ import utils
 from urllib.robotparser import RobotFileParser
 from selenium.webdriver.common.by import By
 import time
-import urllib
-
+import validators
+from w3lib.url import url_query_cleaner
+from bs4 import BeautifulSoup
 class Crawler:
     def __init__(self, seed_url, path_constraint, client):
         self.seed_url = seed_url
@@ -53,10 +54,12 @@ class Crawler:
         if not source:
             print("Couldn't get urls from source")
             return None
-        web_elements = self.driver.find_elements(By.TAG_NAME, 'a')
+        soup = BeautifulSoup(source, 'html.parser')
+        elements = soup.find_all("a")
+        time.sleep(1)
         url_list = []
-        for web_element in web_elements:
-            url = web_element.get_attribute("href")
+        for element in elements:
+            url = element.get('href')
             if url and self._is_valid(url):
                 url_list.append(url)
         return url_list
@@ -66,18 +69,20 @@ class Crawler:
         Returns true if a link is valid. Checks if a link is not blocked by robots.txt and if it has
         the same domain as the seed url's domain.
         """
+        if type(url) != str or not validators.url(url):
+            return False
         url_scheme, url_domain, url_path = utils.split_url(url)
-        print(url)
-        is_visited = self.client.is_visited(url)
         if self.robot_parser.can_fetch("*", url) and url_domain == self.domain \
-            and self._in_path(url_path) and not is_visited:
-            return (True, is_visited)
-        return (False, is_visited)
+            and self._in_path(url_path):
+            return True
+        return False
 
     def _in_path(self, link_path):
         """
         Return true if the seed_path is in the link_path
         """
+        if not link_path:
+            return False
         link_split = link_path.split('/')
         constraint_split = self.path_constraint.split('/')
         return link_split[1] == constraint_split[1]
@@ -121,20 +126,6 @@ class Crawler:
         recipe = r.Recipe(recipe_json_ld, url)
         return recipe
 
-    def get_recipies(self, url_list):
-        """
-        Returns a list of recipies from a list of urls
-        """
-        recipe_list = []
-        for url in url_list:
-            start_time = time.time()
-            source = self._get_source(url)
-            recipe_list.append(self._return_recipe(source, url))
-            end_time = time.time()
-            if(end_time - start_time < 2):
-                time.sleep(2 - (end_time - start_time))
-        return recipe_list
-
     def crawl_urls(self, url_list):
         """
         Crawls the list of urls and returns a list of scraped recipes if they exist
@@ -157,28 +148,37 @@ class Crawler:
             elif not is_visited:
                 self.client.add_url(url)
 
-    def crawl(self, database):
+    def crawl(self):
         """
         Initiates a bfs from the seed_url and crawls all valid neighboring urls while storing 
         recipies into the database. 
         """
         to_visit = []
+        crawl_delay = self.robot_parser.crawl_delay("*")
         to_visit.append(self.seed_url)
+        global_time = time.time()
         count = 0
-        while to_visit and count < 10:
+        while to_visit and count < 100:
+            print()
+            url = to_visit.pop()
+            if self.client.is_visited(url):
+                continue
             start_time = time.time()
-            cur_url = to_visit.pop()
-            cur_source = self._get_source(cur_url)
-            recipe = self._return_recipe(cur_source, cur_url)
-            self.visited_sites.add(cur_url)
-            if recipe:
-                database.insert_recipe(recipe)
-            cur_neighbors = self._get_valid_urls(cur_source)
-            for neighbor in cur_neighbors:
-                to_visit.append(neighbor)
+            source = self._get_source(url)
+            recipe = self._return_recipe(source, url)
+            neighbors = self._get_valid_urls(source)
             end_time = time.time()
-            if self.robot_parser.crawl_delay("*") and \
-                end_time - start_time < self.robot_parser.crawl_delay("*"):
-                time.sleep(end_time - start_time)
-            count += 1
-        
+
+            for neighbor in neighbors:
+                to_visit.append(url_query_cleaner(neighbor, remove=True)) 
+
+            if recipe:
+                print("Saving Recipe")
+                self.client.add_recipe(recipe)
+            elif url != self.seed_url:
+                print("Saving url")
+                self.client.add_url(url)
+            
+            if crawl_delay and end_time - start_time < crawl_delay:
+                time.sleep(crawl_delay - (end_time - start_time))
+            print()

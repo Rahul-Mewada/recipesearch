@@ -20,8 +20,10 @@ def main():
         "https://www.allrecipes.com/recipe/242366/easy-chewy-flourless-peanut-butter-cookies/",
         "https://www.allrecipes.com/recipe/277492/slow-cooker-vegan-leek-and-potato-soup/",
         "https://www.allrecipes.com/recipe/10782/birds-nests-iii/",
-        "https://www.allrecipes.com/recipe/276451/slow-cooker-turkey-meatballs-in-tomato-sauce/",
-        "https://www.allrecipes.com/recipe/256610/grandmas-hungarian-stuffed-cabbage-slow-cooker-variation/",
+        "https://www.allrecipes.com/recipe/276451/slow-cooker-turkey\
+            -meatballs-in-tomato-sauce/",
+        "https://www.allrecipes.com/recipe/256610/grandmas-hungarian-\
+            stuffed-cabbage-slow-cooker-variation/",
         "https://www.allrecipes.com/recipe/230279/divine-macaroons/",
         "https://www.allrecipes.com/recipes/78/breakfast-and-brunch/",
         "https://www.allrecipes.com/recipe/21014/good-old-fashioned-pancakes/",
@@ -35,8 +37,7 @@ def main():
     client = Client('http://localhost:8000/api/')
     crawl = Crawler('https://www.allrecipes.com', '/recipe', client)
     
-    crawl.crawl_urls(url_list)
-    # crawl.get_recipies(url_list)
+    crawl.crawl()
 
 
 

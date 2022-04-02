@@ -7,6 +7,7 @@ class Ingredient:
     def __init__(self, ingredient_dict):
         self.unit = None
         self.quantity = None
+        self.name = None
         for key, value in ingredient_dict.items():
             match key:
                 case "name": 

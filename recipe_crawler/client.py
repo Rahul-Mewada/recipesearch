@@ -27,6 +27,8 @@ class Client:
         Pings the database with the url data and returns true if the url
         exists in the Visited Url table
         """
+        print("GET request to urls")
+        print(url)
         url_hash = crc_hash(url)
         url_data = {
             "url" : url,
@@ -35,9 +37,11 @@ class Client:
         endpoint = self.base_endpoint + self.paths['get_url']
         try:
             response = requests.get(endpoint, json=url_data)
+            if response.status_code == 200:
+                "Url already visited"
         except:
             print("Could not establish connection")
-
+        
         return response.status_code == 200
 
     def add_url(self, url):
@@ -60,17 +64,8 @@ class Client:
         Takes a recipe with an unvisited url and sends a post request
         to the recipe api, adding a recipe and url 
         """
-        print("Adding recipe")
+        print("POST request to recipies")
         endpoint = self.base_endpoint + self.paths['add_recipe']
         response = requests.post(endpoint, json=recipe.to_json())
-
-        print()
-        print()
-        pprint(recipe.to_json())
-        print()
-        print(response.status_code)
-        pprint(response.json())
-        print()
-        print()
 
         return response.status_code
